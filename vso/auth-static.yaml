@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  # SA bound to the VSO namespace for transit engine auth
+  namespace: vault-secrets-operator-system
+  name: demo-operator
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  namespace: webapp
+  name: webapp-static-app
+---
+apiVersion: secrets.hashicorp.com/v1beta1
+kind: VaultAuth
+metadata:
+  name: static-auth
+  namespace: webapp
+spec:
+  method: kubernetes
+  mount: webapp-auth-mount
+  kubernetes:
+    role: role1
+    serviceAccount: webapp-static-app
+    audiences:
+      - vault
